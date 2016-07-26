@@ -10,21 +10,19 @@ function fn(server)
     {
         socket.on('createTerminal', function(term_id, func)
         {
-            console.log(term_id)
             var name = term_id.split('§')[0]
             var host_ip = term_id.split('§')[1]
 
             var cmd = ['-H', host_ip+':2375', 'exec', '-it', name, '/bin/bash'] 
-            if( !process.env.PRODUCTION ){
-                name = "hello-world" //'-H', host_ip+':2375', 
-                cmd = ['exec', '-it', name, '/bin/bash']
-            }
+            // if( !process.env.PRODUCTION ){
+            //     name = "hello-world" //'-H', host_ip+':2375', 
+            //     cmd = ['exec', '-it', name, '/bin/bash']
+            // }
             term_id = tid++
-            console.log('docker', cmd)
+
             var term = pty.spawn('docker', cmd, {cwd: '/'})
-            // console.log('docker', ['-H', config.endpoint, 'exec', '-it', name, '/bin/bash'])
+
             .on('data', function(data){
-                console.log(data)
                 socket.emit('data'+ term_id, data)
             })
             .on('exit', function(){
