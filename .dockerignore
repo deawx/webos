@@ -1,0 +1,12 @@
+client
+images
+node_modules
+resoure
+server
+typings
+.gitignore
+Dockerfile
+Makefile
+README.md
+tsconfig.json
+webpack.config.js

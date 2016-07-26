@@ -1,0 +1,38 @@
+
+.dockbar-start .start-button{
+    background-image:url("images/start.png");
+    background-size: contain;
+    float: left;
+    width: 50px;
+    height: 40px;
+}
+
+.dockbar-start .start-button:hover{
+    transition: 0.5s linear;
+    background-image:url("images/start-hover.png");
+}
+.dockbar-start .start-butto-active{
+    transition: 0.5s linear;
+    background-image:url("images/start-hover.png");
+}
+
+.dockbar-start .dockbar-search{
+    float: left;
+    margin-left: 5px;
+}
+
+.dockbar-start .dockbar-search input{
+    height: 28px;
+    width: 300px;
+    background: rgba(82,101,127,1);
+    border: 0px;
+    font-size: 14px;
+    padding-left: 5px;
+    margin: 5px 10px;
+} 
+
+.dockbar-start .dockbar-search input:focus{
+    background:none;
+    background: #fff;
+    outline:none;
+}

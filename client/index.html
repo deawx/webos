@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html style="width:100%;height:100%;overflow: hidden;">
+    <head>
+        <meta charset=UTF-8>
+        <title>Angular2 Seed</title>
+    </head>
+  
+    <link rel="stylesheet" href="css/terminal.css">
+    <script src="js/sh.js"></script>
+    <script src="js/socket.io.js"></script>
+    <script src="js/ace.js"></script>
+    <script src="js/html2canvas.js"></script>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Slabo+27px' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+    <style>
+        body{
+            /*font-family: 'Open Sans Condensed', sans-serif;*/
+            font-family: 'Lora', serif;
+        }
+      .dockbar-icon-folder{
+          background-image:url("images/dockbar/folder.png");
+      }
+      .icon-vscode{
+          background-image: url("images/icons/vscode.ico")
+      }
+      .icon-email{
+          background-image: url("images/icons/gmail.png")
+      }
+      .icon-bing{
+          background-image: url("images/icons/bing.png")
+      }
+      .icon-webpack{
+          background-image: url("images/icons/webpack.jpg")
+      }
+      .icon-elastic{
+          background-image: url("images/icons/elasticsearch.png")
+      }
+      .icon-nodejs{
+          background-image: url("images/icons/nodejs.png")
+      }
+      .icon-mongodb{
+          background-image: url("images/icons/MongoDB2.png")
+      }
+      .icon-typescript{
+          background-image: url("images/icons/ts.png")
+      }
+      .icon-angular{
+          background-image: url("images/icons/angular.jpg")
+      }
+      .icon-computer{
+          background-image: url("images/icons/computer.ico");
+      }
+      .dockbar-icon-terminal, .icon-terminal{
+          background-image: url("images/icons/terminal-1.png");
+      }
+      .icon-user{
+          background-image: url("images/icons/user.ico");
+      }
+      
+      .icon-folder{
+          background-image: url("images/icons/folder.ico");
+      }
+      
+      .icon-textfile{
+          background-image: url("images/icons/text.png");
+      }
+      
+      .icon-file{
+          background-image: url("images/icons/file.ico");
+      }
+      
+    .panel{
+        position: absolute;
+        left:100px;
+        top:100px;
+        border:1px solid #ccc;
+        background-color:#fff;
+        border-radius:1px;
+    }
+
+    .panel .header{
+        width:100%;
+        height:30px;
+        text-align: left;
+        background-color:#eee;
+    }
+
+    .panel.focus .header  {
+        background-color:rgba(138,165,204,1);
+        /*background-color: #1f5bb7*/
+    }
+
+    .panel.focus  {
+        border-color:rgba(138,165,204,1);
+    }
+
+    .panel .header .icon{
+        height: 20px;
+        width: 20px;
+        float: left;
+        margin: 4px;
+        background-size: 20px 20px;
+    }
+
+    .panel .header .title{
+        padding-top: 5px;
+        float: left;
+        font-size: 13px;
+        line-height: 20px;
+        -moz-user-select:none;/*火狐*/
+        -webkit-user-select:none;/*webkit浏览器*/
+        -ms-user-select:none;/*IE10*/
+        -khtml-user-select:none;/*早期浏览器*/
+        cursor: default;
+    }
+
+    .panel-title-buttons {
+        height:28px;
+        float: right;
+        margin-top: 2px;
+        margin-right: 2px
+    }
+
+
+    .panel-btn {
+        float: right;
+        margin-right: 10px;
+        margin-top: 7px;
+        width:85px;
+        font-size:13px;
+        
+    }
+    
+    .icon-min{
+        width:40px;
+        height:19px;
+        float: left;
+    }
+    .icon-min:after{
+        content: ' ';
+        position: absolute;
+        width: 12px;
+        height: 9px;
+        border-bottom: 1px solid #000;
+        margin-left: 15px;
+        top:4px;
+    }
+
+    .icon-min:hover{
+        background:RGB(204,204,204);
+        
+    }
+
+    .icon-max{
+        width:40px;
+        height:19px;
+        float: left;
+    }
+
+    .icon-max:after{
+        content: ' ';
+        position: absolute;
+        width: 10px;
+        height: 8px;
+        border: 1px #000 solid;
+        margin-left: 14px;
+        top:7px;
+        /*border-top-width: 1px;*/
+    }
+    .icon-max:hover{
+        /*background-image:url(images/dialog/max.png);*/
+        background:RGB(204,204,204);
+    }
+
+    .icon-close{
+        width:40px;
+        height:22px;
+        float: left;
+    }
+    .icon-close:after{
+        content: '\D7';
+        padding-left: 16px;
+    }
+    .icon-close:hover{
+        background:RGB(224,67,67);
+        color: #fff;
+    }
+
+
+
+    /*window*/
+    .panel .design-resize-left, .design-resize-right  , .design-resize-bottom , .design-resize-left-bottom , .design-resize-right-bottom{
+        background:#b7bfca;
+        float: left;
+        position: absolute;
+        opacity: 0;                /* Firefox, Safari(WebKit), Opera,chrome/    filter: "alpha(opacity=60)"; /* IE 8 */
+        filter: alpha(opacity=0);   /* IE 4-7 */
+    }
+    .design-resize-left{
+        width:4px;
+        height: 100%;
+        cursor:e-resize; 
+        left:0px;
+        top:0px;
+    }
+    .design-resize-right{
+        width:4px;
+        height: 100%;
+        cursor:e-resize; 
+        right:0px;
+        top:0px;
+    }
+    .design-resize-bottom{
+        height:4px;
+        width:100%;
+        cursor:n-resize;
+        overflow:hidden; 
+        left:0px;
+        bottom:0px;
+    }
+    .design-resize-left-bottom{
+        height:4px;
+        width:4px;
+        cursor:sw-resize; 
+        left:0px;
+        bottom:0px;
+    }
+    .design-resize-right-bottom{
+        height:4px;
+        width:4px;
+        cursor:se-resize; 
+        right:0px;
+        bottom:0px;
+    }
+    </style>
+    
+    <body style="width:100%;margin:0px">
+        <Home>
+            Loading...
+        </Home>
+    </body>
+</html>
