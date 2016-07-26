@@ -1,5 +1,1 @@
-# run it
-npm install -g typings webpack
-npm install
-
-npm start# web-desktop
+![](https://github.com/junjun16818/webos/blob/master/resource/images/demo/demo.jpeg?raw=true)
