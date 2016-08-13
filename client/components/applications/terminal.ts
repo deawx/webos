@@ -46,7 +46,7 @@ export class TerminalCmp
     }
 	setTerminal(){
 		this.term = new Terminal({}) 
-		this.socket = io.connect("http://"+window.location.host)
+		this.socket = io.connect("http://"+(window.location.host || '127.0.0.1:8004'))
 		var term_id = this.container_id+'§'+ this.host_ip+'§' + this._id
 
 
@@ -111,17 +111,21 @@ export class Bash
     setTerminal()
     {
         var term_id = this.container_id +'§' + this.host_ip +'§' + this._id
-        this.socket = io.connect("http://"+window.location.host)
+		this.socket = io.connect("http://"+(window.location.host || '127.0.0.1:8004'))
         this.socket.emit('createTerminal', term_id, (term_id)=>
         {
             var str = ''
             
             this.term_id = term_id
             this.socket.on('data'+term_id, (data)=>{
+                console.log(data.toString().replace(/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]/g, ''))
                 str += data.toString().replace(/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]/g, '')
-                if( /[\d\w]+:\//.test(str.trim()) && /#$/.test(str.trim())){
+                if ( /[\d\w]+:\//.test(str.trim()) && /#$/.test(str.trim())){
+                    console.log('nathch ', str)
                     this.callback && this.callback(str)
                     str = ''
+                }else{
+                    // console.log(data.toString())
                 }
             })
             this.afterInit()
@@ -138,8 +142,11 @@ export class Bash
 
     public ls(name, done){
         this.callback = (data)=>{
+            console.log(data.split('\n').length)
+            if( data.split('\n').length === 2)
+                return 
+
             this.callback = null
-            console.log(555555,data)
             done(this.parse(data))
         }
         this.socket.emit('data'+this.term_id, 'file '+name+'/* --mime \n')
@@ -153,18 +160,27 @@ export class Bash
         this.socket.emit('data'+this.term_id, `echo "${text}" > ${path} \n`)
     }
     
+    public unzip(path, topath, done){
+        // unzip -o -d ' + paths + ' ' + req.query.path
+        this.callback = (data)=>{
+            this.callback = null
+            done()
+        }
+        console.log(`unzip -o -d ${topath} ${path}`)
+        this.socket.emit('data'+this.term_id, `unzip -o -d ${topath} ${path} \n`)
+    }
+
     public parse(str){
-        console.log(str)
         var list = str.split('\n')
-        var list2 , list3 = []
+        var list2 = [] , list3 = []
         list.forEach(function(item) {
-            if( item.indexOf('/') === 0 )
+            if( item.indexOf('/') === 0 ){
                 list2 = list2 || []
                 
-            if(list2)
                 list2.push(item)
+            }
         })
-        list2.pop()
+        // list2.pop()
         
         list2.forEach(function(item, index)
         {
@@ -178,8 +194,8 @@ export class Bash
                 return 
             
             list3.push({
-                type: str[1].split(';')[0],
-                name: str[0].split('/').pop(),
+                type: str[1]? str[1].split(';')[0]: '',
+                name: str[0]? str[0].split('/').pop(): '',
                 path: str[0]
             })
         })

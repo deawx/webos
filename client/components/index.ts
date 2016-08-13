@@ -1,4 +1,4 @@
-import { Component, OnInit, DynamicComponentLoader,ViewContainerRef, Injector } from '@angular/core';
+import { Component, OnInit, DynamicComponentLoader,ViewContainerRef, Injector, ApplicationRef } from '@angular/core';
 import { ROUTER_DIRECTIVES, RouteParams, Router }   from '@angular/router-deprecated';
 
 import { DesktopCmp } from './desktop/desktop'
@@ -7,12 +7,16 @@ import { DockbarCmp, dockAppList, searchEvent } from './dockbar/dockbar'
 import { FileExplorerCmp } from './file-explorer/file-explorer'
 import { TerminalCmp } from './applications/terminal'
 import { UrlAppCmp } from './applications/url-app'
+import { PdfCmp } from './applications/pdf'
 import { VsCodeCmp } from './applications/vscode'
 import { MenuCmp } from './menu/menu'
 import { Commander } from './tools/commander'
 import { dblClickEvent } from './shortcut/shortcut'
 import { winMenuList } from './dockbar/win-menu/win-menu'
 import { Bash } from './applications/terminal'
+import { Webtorrent } from './applications/webtorrent'
+import { TorrentSearch } from './applications/torrent-search'
+import { PhotoViewer } from './applications/photo-viewer'
 import { DomSanitizationService } from '@angular/platform-browser'
 
 
@@ -37,12 +41,19 @@ export class HomeCmp extends Commander implements OnInit
     socket;term_id
     callback
 
-    constructor(public dcl: DynamicComponentLoader, public viewContainerRef: ViewContainerRef, private sanitizer: DomSanitizationService){
+    constructor(public dcl: DynamicComponentLoader, public viewContainerRef: ViewContainerRef, private sanitizer: DomSanitizationService, private applicationRef: ApplicationRef){
         super()
+
+        window['host_ip'] = this.getRequest().host_ip
+        window['container_id'] = this.getRequest().container_id
+
+        console.log()
+        // ApplicationRef.tick()
+
         var bash = new Bash(this.getRequest().host_ip, this.getRequest().container_id)
         
         dblClickEvent((shortcut)=>{
-            if( shortcut.type === 'text/plain' ){
+            if( shortcut.type === 'text/plain' || shortcut.type === 'inode/x-empty' ){
                 bash.cat(shortcut.path, (err, data)=>{
                     this.createCmp(VsCodeCmp).then((ref)=>{
                         var component = ref['_hostElement'].component
@@ -57,9 +68,45 @@ export class HomeCmp extends Commander implements OnInit
                     })
                 })
             }
+
+            if( shortcut.type === 'image/x-icon' || shortcut.type === 'image/png' || shortcut.type === 'image/jpeg'){
+                var url = `/getFile/${window['host_ip']}/${window['container_id']}?url=`+shortcut.path.replace(/\/\//g, '/')+'&type='+shortcut.type
+                console.log(url)
+                this.createCmp(PhotoViewer).then((ref)=>{
+                    var component = ref['_hostElement'].component
+                    component.url = url
+                })
+            }
+
+            if( shortcut.type === 'application/x-bittorrent' ){
+                this.createCmp(Webtorrent).then(ref=>{
+                    var component = ref['_hostElement'].component
+                    component.url = shortcut.path
+                })
+            }
+            if( shortcut.type === 'application/pdf' ){
+                var url = `/getFile/${window['host_ip']}/${window['container_id']}?url=`+shortcut.path.replace(/\/\//g, '/')+'&type='+shortcut.type
+                console.log(url)
+                this.createCmp(PdfCmp).then((ref)=>{
+                    var component = ref['_hostElement'].component
+                    component.url = url
+                })
+            }
+
+            if( shortcut.type === 'application/zip' )
+            {
+                var path = shortcut.path.split('/')
+                console.log()
+                console.log (shortcut.path, path.join('/'))
+                bash.unzip(shortcut.path, shortcut.path.substr(0, shortcut.path.indexOf('.')), ()=>{
+                    alert(1)
+                })
+            }
+            
+            console.log(shortcut)
         })
     }
-    
+
     getRequest(): any 
     {
         var url = location.search
@@ -78,14 +125,29 @@ export class HomeCmp extends Commander implements OnInit
 
     ngOnInit()
     {
-        this.createCmp(TerminalCmp).then(ref=>{
-            var component = ref['_hostElement'].component
-            component.host_ip = this.getRequest().host_ip
-            component.container_id = this.getRequest().container_id
-            component.max = true
-        })
-        if( !this.getRequest().desktop )
-            return 
+        document.domain = '127.0.0.1'
+        window['iframe_var'] = 'hello iframe'
+        
+        window['webtorrent'] = (url)=>
+        {
+            console.log(url)
+            if( window['cmpList']['Webtorrent'] ){
+                window['cmpList']['Webtorrent'].forEach((ref, index)=>
+                {
+                    ref.destroy()
+                })
+                window['cmpList']['Webtorrent'] = []
+            }
+
+            setTimeout(() => {
+                this.createCmp(Webtorrent).then(ref=>{
+                    var component = ref['_hostElement'].component
+                    component.url = url 
+                    this.applicationRef.tick()
+                })
+            },10)
+        }
+
         window['web-desktop'] = true
 
         searchEvent.search = (value) =>
@@ -98,8 +160,6 @@ export class HomeCmp extends Commander implements OnInit
                 $('body').click()
             })
         }
-
-
 
         winMenuList.top.push({
             name: 'Email',
@@ -139,7 +199,7 @@ export class HomeCmp extends Commander implements OnInit
         })
 
         winMenuList.life.push({
-            image: '/images/icons/angular.jpg',
+            image: 'images/icons/angular.jpg',
             click:()=>{
                 this.createCmp(UrlAppCmp).then(ref=>{
                     var component = ref['_hostElement'].component
@@ -150,7 +210,7 @@ export class HomeCmp extends Commander implements OnInit
                 })
             }
         },{
-            image: '/images/icons/nodejs.png',
+            image: 'images/icons/nodejs.png',
             click:()=>{
                 this.createCmp(UrlAppCmp).then(ref=>{
                     var component = ref['_hostElement'].component
@@ -161,7 +221,7 @@ export class HomeCmp extends Commander implements OnInit
                 })
             }
         },{
-            image: '/images/icons/webpack.jpg',
+            image: 'images/icons/webpack.jpg',
             click:()=>{
                 this.createCmp(UrlAppCmp).then(ref=>{
                     var component = ref['_hostElement'].component
@@ -172,7 +232,7 @@ export class HomeCmp extends Commander implements OnInit
                 })
             }
         },{
-            image: '/images/icons/typescript.svg',
+            image: 'images/icons/typescript.svg',
             big: true,
             click:()=>{
                 this.createCmp(UrlAppCmp).then(ref=>{
@@ -187,7 +247,7 @@ export class HomeCmp extends Commander implements OnInit
 
 
         winMenuList.browse.push({
-            image: '/images/icons/mongodb.png',
+            image: 'images/icons/mongodb.png',
             big: true,
             click:()=>{
                 this.createCmp(UrlAppCmp).then(ref=>{
@@ -199,7 +259,7 @@ export class HomeCmp extends Commander implements OnInit
                 })
             }
         },{
-            image: '/images/icons/elasticsearch.png',
+            image: 'images/icons/elasticsearch.png',
             click:()=>{
                 this.createCmp(UrlAppCmp).then(ref=>{
                     var component = ref['_hostElement'].component
@@ -226,7 +286,6 @@ export class HomeCmp extends Commander implements OnInit
                 })
             }
         })
-
 
         this.createCmp(DockbarCmp, false).then(ref=>{
             var component = ref['_hostElement'].component
@@ -263,8 +322,10 @@ export class HomeCmp extends Commander implements OnInit
                     {
                         var component = ref['_hostElement'].component
                         component.title = 'Documents'
-                        component.path = '~/'
+                        component.path = '/root/'
+                        component.uploadUrl = '/upload/' + window['host_ip']+'/' +  window['container_id']
                         component.setContainer(this.getRequest().host_ip, this.getRequest().container_id)
+                        $('body').click()
                     })
                 }
             },{
@@ -272,10 +333,12 @@ export class HomeCmp extends Commander implements OnInit
                 text: 'This PC',
                 shadow: 'shadow',
                 dblclick: ()=>{
+                    
                     this.createCmp(FileExplorerCmp).then(ref=>
                     {
                         var component = ref['_hostElement'].component
                         component.path = '/'
+                        console.log(this.getRequest())
                         component.setContainer(this.getRequest().host_ip, this.getRequest().container_id)
                     })
                 }
@@ -288,6 +351,36 @@ export class HomeCmp extends Commander implements OnInit
                         var component = ref['_hostElement'].component
                         component.host_ip = this.getRequest().host_ip
                         component.container_id = this.getRequest().container_id
+                        $('body').click()
+                    })
+                }
+            }/*,{
+                icon: 'icon-jav',
+                text: 'Jav',
+                shadow: 'shadow',
+                dblclick: ()=>{
+                    this.createCmp(UrlAppCmp).then(ref=>{
+                        var component = ref['_hostElement'].component
+                        component.url = 'http://127.0.0.1:8008'
+
+                        window['movie_cmp'] = {
+                            component: component,
+                            destroy: ()=>{
+                                ref.destroy()
+                            }
+                        }
+                    })
+                }
+            }*/,{
+                icon: 'icon-torrent',
+                text: 'Torrent',
+                shadow: 'shadow',
+                dblclick: ()=>{
+                    
+                    this.createCmp(TorrentSearch).then(ref=>{
+                        var component = ref['_hostElement'].component
+                        component.dockbar_icon = 'icon-torrent'
+                        // component.url = url
                     })
                 }
             }]

@@ -52,10 +52,12 @@
     "url-loader": "^0.5.7",
     "webpack": "^1.12.9",
     "webpack-dev-server": "^1.14.0",
-    "webpack-merge": "^0.8.4"
+    "webpack-merge": "^0.8.4",
+    "webtorrent": "^0.95.5"
   },
   "dependencies": {
     "body-parser": "^1.15.1",
+    "connect-multiparty": "^2.0.0",
     "cookie-parser": "^1.4.1",
     "cookie-session": "^2.0.0-alpha.1",
     "express": "^4.13.4",
@@ -63,6 +65,7 @@
     "request": "^2.72.0",
     "rxjs": "5.0.0-beta.6",
     "socket.io": "^1.4.8",
+    "tar": "^2.2.1",
     "underscore": "^1.8.3",
     "zone.js": "~0.6.12"
   },

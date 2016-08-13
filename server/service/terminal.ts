@@ -12,24 +12,28 @@ function fn(server)
         {
             var name = term_id.split('§')[0]
             var host_ip = term_id.split('§')[1]
+            var cmd:any
 
-            var cmd = ['-H', host_ip+':2375', 'exec', '-it', name, '/bin/bash'] 
-            // if( !process.env.PRODUCTION ){
-            //     name = "hello-world" //'-H', host_ip+':2375', 
-            //     cmd = ['exec', '-it', name, '/bin/bash']
-            // }
+            if( !process.env.PRODUCTION ){
+                //name = "hello-world2" //'-H', host_ip+':2375', 
+                // cmd = ['exec', '-it', name, '/bin/bash']
+            }
+            cmd = ['-H', host_ip, 'exec', '-it', name, '/bin/bash'] 
             term_id = tid++
 
+            console.log(cmd.join(' '))
             var term = pty.spawn('docker', cmd, {cwd: '/'})
 
             .on('data', function(data){
                 socket.emit('data'+ term_id, data)
             })
+
             .on('exit', function(){
                 socket.emit('exit', {})
             })
             
             socket.on('data'+ term_id, function(data){ 
+                console.log(data)
                 term.write(data)
             })
             .on('resize'+term_id, function(data){

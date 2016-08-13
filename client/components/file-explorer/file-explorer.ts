@@ -1,14 +1,19 @@
-import { Component, ElementRef, Input, OnDestroy } from '@angular/core'
+import { Component, ElementRef, Input, OnDestroy, OnInit } from '@angular/core'
 import { NgClass } from '@angular/common';
 import { ShortcutCmp } from '../shortcut/shortcut'
 import { Dialog } from '../../directives/dialog'
 import { Bash } from '../applications/terminal'
-declare var $ 
+declare var $ , fefef
 
 var iconMap = {
     'inode/directory': 'icon-folder',
     'text/plain': 'icon-textfile',
-    'inode/x-empty': 'icon-textfile'
+    'inode/x-empty': 'icon-textfile',
+    'image/x-icon':'icon-photo',
+    'image/png':'icon-photo',
+    'image/jpeg':'icon-photo',
+    'application/pdf':'icon-pdf',
+    'application/zip':'icon-zip',
 }
 
 @Component({
@@ -37,7 +42,7 @@ var iconMap = {
     directives: [ Dialog, ShortcutCmp, NgClass ]
 })
 
-export class FileExplorerCmp implements OnDestroy 
+export class FileExplorerCmp implements OnDestroy
 {
     title = 'File Explorer'
     shortcuts = []
@@ -50,15 +55,22 @@ export class FileExplorerCmp implements OnDestroy
     path = '/'
     backs = []
     aheads = []
+    uploadUrl = ''
     fileList = []
 	constructor(elementRef: ElementRef){
         this.element = $(elementRef.nativeElement)
 	}
+
+    ngAfterViewInit(){
+        if( this.uploadUrl )
+            this.dropbox()
+    }
+
     onResize(){
         this.element.find('.dialog-body').height(this.element.find('.dialog-body').height()-41)
         this.element.find('.dialog-body').width(this.element.find('.dialog-body').width())
     }
-
+    
     setContainer(host_ip, container_id){
         this.bash = new Bash(host_ip, container_id)
         this.bash.afterInit = (()=>{
@@ -107,18 +119,60 @@ export class FileExplorerCmp implements OnDestroy
     
     dropbox(){
         
+        var dropbox = $(this.element).find('.body')[0]
+        
+        dropbox.addEventListener("dragenter", function(e){  
+            dropbox.style.background = '#f2f2f2';  
+        }, false);  
+        dropbox.addEventListener("dragleave", function(e){  
+            dropbox.style.background = '#fff';  
+        }, false);  
+        dropbox.addEventListener("dragenter", function(e){  
+            e.stopPropagation();  
+            e.preventDefault();  
+        }, false);  
+        dropbox.addEventListener("dragover", function(e){  
+            e.stopPropagation();  
+            e.preventDefault();  
+        }, false);  
+        dropbox.addEventListener("drop", (e)=>{  
+            e.stopPropagation();  
+            e.preventDefault();  
+            dropbox.style.background = '#fff';  
+            console.log(e.dataTransfer.files[0])
+            // handleFiles(e.dataTransfer.files);  
+            this.uploadFile(e.dataTransfer.files[0],1)
+            // submit.disabled = false;  
+        }, false);  
     }
      
     uploadFile(file, status) {
-       
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', this.uploadUrl + '?path='+this.path);
+        xhr.onload = ()=> {
+            this.refresh()
+        };
+        xhr.onerror = function() {
+            console.log(this.responseText)
+            console.log(file.size);
+        };
+        xhr.upload.onprogress = function(event) {
+            // handleProgress(event);
+            console.log(event)
+        }
+        xhr.upload.onloadstart = function(event) {
+            
+        }
+        
+        // prepare FormData
+        var formData = new FormData();
+        formData.append('myfile', file);
+        xhr.send(formData);
     }
     
     refresh(){
-        alert(1)
         this.setPath(this.path, false)
     }
-    
-    
     
     back()
     {
@@ -127,7 +181,6 @@ export class FileExplorerCmp implements OnDestroy
             var path = this.backs.pop()
             this.aheads.push(this.path)
             this.setPath(path, false)
-            
         }
     } 
     

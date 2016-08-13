@@ -13,6 +13,7 @@ export class Commander
     createCmp(cmp, isDock = true)
     {
         window['cmpMap'] = window['cmpMap'] || {}
+        window['cmpList'] = window['cmpList'] || {}
         const ref = this.dcl.loadNextToLocation(cmp, this.viewContainerRef)
         
         ref.then(ref=>
@@ -20,9 +21,9 @@ export class Commander
                 
                 var name = ref['_componentType'].name
                 const component = ref['_hostElement'].component
-
-
-                    
+                    // console.log( 3333333,name)
+                window['cmpList'][name] = window['cmpList'][name] || []
+                window['cmpList'][name].push(ref)
                 const id = idIndex++
                 const element = $(ref['_hostElement']['nativeElement'])
                 element.attr('id', id)

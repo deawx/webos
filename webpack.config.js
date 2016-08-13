@@ -13,12 +13,11 @@ fs.readdirSync('node_modules').filter(function(x) {
 }).forEach(function(mod) {
     nodeModules[mod] = 'commonjs ' + mod
 })
-
 var serverConfig = {
-    entry: "./server/server.ts",
+    entry: { index: "./server/server.ts" },
     output: {
         path: __dirname,
-        filename: "dist/index.js"
+        filename: "dist/[name].js"
     },
     target: 'node',
     module: {
@@ -30,7 +29,7 @@ var serverConfig = {
         extensions: ['', '.ts', 'js']
     },
     node: {
-        __dirname: true
+        __dirname: false
     },
     externals: nodeModules
 }
@@ -60,7 +59,7 @@ var webpackConfig = {
             { from: 'images/**/*', to: path.join(__dirname, 'public'), context: path.join(__dirname, 'resource/') },
             { from: 'css/*', to: path.join(__dirname, 'public'), context: path.join(__dirname, 'resource/') },
 //             { from: 'css/*', to: path.join(__dirname, 'public'), context: path.join(__dirname, 'node_modules/') },
-            { from: `js/*`, to: path.join(__dirname, 'public/js'), context: path.join(__dirname, 'resource/') },
+            { from: `js/*`, to: path.join(__dirname, 'public/'), context: path.join(__dirname, 'resource/') },
             { from: `socket.io.js`, to: path.join(__dirname, 'public/js'), context: path.join(__dirname, 'node_modules/socket.io-client/') },
             { from: `ace.js`, to: path.join(__dirname, 'public/js'), context: path.join(__dirname, 'node_modules/ace-builds/src/') },
         ])
@@ -109,6 +108,7 @@ var defaultConfig = {
         extensions: ['', '.ts', '.js'],
         alias: {
             'jquery': path.join(__dirname, 'node_modules', 'jquery', 'dist', 'jquery.min.js'),
+            'es6-promise': path.join(__dirname, 'node_modules', 'es6-promise', 'dist', 'es6-promise.js'),
             'underscore': path.join(__dirname, 'node_modules', 'underscore', 'underscore-min.js'),
             'angular2/testing': path.join(__dirname, 'node_modules', '@angular', 'core', 'testing.js'),
             '@angular/testing': path.join(__dirname, 'node_modules', '@angular', 'core', 'testing.js'),
