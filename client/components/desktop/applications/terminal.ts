@@ -149,7 +149,9 @@ export class Bash
             this.callback = null
             done(this.parse(data))
         }
-        this.socket.emit('data'+this.term_id, 'file '+name+'/* --mime \n')
+        setTimeout(()=> {
+            this.socket.emit('data'+this.term_id, 'file '+name+'/* --mime \n')
+        });
     }
 
     public write(path, text, done){
