@@ -7,8 +7,8 @@ declare var $, html2canvas
 export var dockAppList = []
 
 @Component({
-    selector: 'dock-app',
-    styleUrls: [ './components/dockbar/dock-item/dock-item.css' ],
+    selector: 'dock-app', 
+    styleUrls: [ './components/desktop/dockbar/dock-item/dock-item.css' ],
     directives: [ NgClass ],
     template:  `
         <div (mouseenter)="mouseenter(dock.items)" (mouseleave)="mouseout()" (click)="clickIcon(dock)" *ngIf="dock.items.length" [ngClass]="{ 'dockbar-icon-many': dock.items.length > 1 }" class="dockbar-icon">
@@ -181,7 +181,7 @@ class DockAppCmp {
             <dock-app *ngFor="let dock of dockAppList" [dock]="dock"></dock-app>
         </div>
     `,
-    styleUrls: ['./components/dockbar/dock-item/dock-item.css'],
+    styleUrls: ['./components/desktop/dockbar/dock-item/dock-item.css'],
     directives: [DockAppCmp]
 })
 

@@ -23,7 +23,7 @@ export function dblClickEvent(done){
             </div>
         </div>
     `,
-    styleUrls: ['./components/shortcut/shortcut.css'],
+    styleUrls: ['./components/desktop/shortcut/shortcut.css'],
     directives: []
 })
 

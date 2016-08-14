@@ -38,7 +38,7 @@ var iconMap = {
             </div>
         </div>
     `,
-    styleUrls: ['./components/file-explorer/file-explorer.css'],
+    styleUrls: ['./components/desktop/file-explorer/file-explorer.css'],
     directives: [ Dialog, ShortcutCmp, NgClass ]
 })
 

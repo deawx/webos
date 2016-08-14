@@ -22,7 +22,7 @@ export { searchEvent }
             </div>
         </div>
     `,   
-    styleUrls: ['./components/dockbar/dockbar.css'], 
+    styleUrls: ['./components/desktop/dockbar/dockbar.css'], 
     directives: [StartCmp, DockCmp]
 })
 

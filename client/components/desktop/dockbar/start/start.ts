@@ -15,7 +15,7 @@ declare var $
             <win-menu *ngIf="isShow" ></win-menu>
         </div>
     `,
-    styleUrls: ['./components/dockbar/start/start.css'],
+    styleUrls: ['./components/desktop/dockbar/start/start.css'],
     directives: [ WinMenuCmp ]
 })
 

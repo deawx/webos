@@ -19,7 +19,7 @@ export var menuList = []
             </ul>
         </div>
     `,
-    styleUrls: ['./components/menu/menu.css'],
+    styleUrls: ['./components/desktop/menu/menu.css'],
     directives: [NgStyle]
 })
 

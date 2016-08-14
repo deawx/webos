@@ -55,7 +55,7 @@ var webpackConfig = {
         }),
         new CopyWebpackPlugin([
             // { from: 'components/**/*.html', to: path.join(__dirname, 'public'), context: path.join(__dirname, 'client/') },
-            { from: 'components/**/*.css', to: path.join(__dirname, 'public'), context: path.join(__dirname, 'client/') },
+            { from: 'components/**/**/*.css', to: path.join(__dirname, 'public'), context: path.join(__dirname, 'client/') },
             { from: 'images/**/*', to: path.join(__dirname, 'public'), context: path.join(__dirname, 'resource/') },
             { from: 'css/*', to: path.join(__dirname, 'public'), context: path.join(__dirname, 'resource/') },
 //             { from: 'css/*', to: path.join(__dirname, 'public'), context: path.join(__dirname, 'node_modules/') },

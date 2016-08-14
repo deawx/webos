@@ -85,7 +85,7 @@ export var winMenuList = {top: [], bottom: [], life: [], browse: []}
             </div>
         </div>
     `,
-    styleUrls: ['./components/dockbar/win-menu/win-menu.css'],
+    styleUrls: ['./components/desktop/dockbar/win-menu/win-menu.css'],
     providers: [],
     directives: []
 })
