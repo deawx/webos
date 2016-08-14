@@ -30,7 +30,7 @@
   http://localhost:8119/#/desktop/{{docker_host}}/helloworld
 ```
 
-# demo
+# demo (please use chrome open it!)
 
 [http://cncloud.io/#/desktop/118.193.87.6:2376/helloworld1](http://cncloud.io/#/desktop/118.193.87.6:2376/helloworld1)
 
