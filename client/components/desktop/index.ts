@@ -358,19 +358,21 @@ export class HomeCmp extends Commander implements OnInit
                         $('body').click()
                     })
                 }
-            },{
-                icon: 'icon-torrent',
-                text: 'Torrent',
-                shadow: 'shadow',
-                dblclick: ()=>{
+            }
+            // ,{
+            //     icon: 'icon-torrent',
+            //     text: 'Torrent',
+            //     shadow: 'shadow',
+            //     dblclick: ()=>{
                     
-                    this.createCmp(TorrentSearch).then(ref=>{
-                        var component = ref['_hostElement'].component
-                        component.dockbar_icon = 'icon-torrent'
-                        // component.url = url
-                    })
-                }
-            }]
+            //         this.createCmp(TorrentSearch).then(ref=>{
+            //             var component = ref['_hostElement'].component
+            //             component.dockbar_icon = 'icon-torrent'
+            //             // component.url = url
+            //         })
+            //     }
+            // }
+            ]
         })
     }
 }
