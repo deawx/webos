@@ -54,6 +54,7 @@ export class FileExplorerCmp implements OnDestroy
 	height = 500
     path = '/'
     backs = []
+    shortcut_menu = []
     aheads = []
     uploadUrl = ''
     fileList = []
@@ -92,7 +93,7 @@ export class FileExplorerCmp implements OnDestroy
                 item.text = item.name
 
                 item.icon = iconMap[item.type] || 'icon-file'
-
+                item.menu = this.shortcut_menu
                 if( item.icon === 'icon-folder' ){
                     item.dblclick = (data)=>{
                         this.setPath(data.path.replace('//', '/'))

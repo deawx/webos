@@ -55,3 +55,43 @@ console.log(1)
 //         })
 //     })
 // })
+
+
+var WebTorrent = require('webtorrent') 
+
+const sio = require('socket.io')
+
+var torrentMap = {}
+
+sio.listen(8004).sockets.on('connection', function(socket)
+{
+    socket.on('createWebTorrent', function(torrentPath, func)
+    {
+        // torrentPath = this.url = __dirname + '/public/3.torrent'
+        console.log(torrentPath)
+        var client = new WebTorrent()
+        var server , torrent
+
+        socket.on('disconnect', function(){
+            console.log('disconnect')
+            server.close()
+            client.destroy()
+        })
+
+        client.add(torrentPath, function (_torrent) {
+            torrent = _torrent
+            server = torrent.createServer()
+            server.listen(8005)
+            var nameList = []
+            torrent.files.forEach(function(file){
+                nameList.push(file.name)
+            })
+            func(nameList) 
+        })
+    })
+})
+
+
+
+
+

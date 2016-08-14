@@ -319,6 +319,27 @@ export class HomeCmp extends Commander implements OnInit
                         component.path = '/root/'
                         component.uploadUrl = '/upload/' + this.host+'/' +  this.container
                         component.setContainer(this.host, this.container)
+                        // component.shortcut_menu = [{
+                        //     text: 'open',
+                        //     handler: function(event){
+                        //         // item.dblclick()       
+                        //     }
+                        // }, {
+                        //     text: "rename",
+                        //     handler: function(event){
+                        //         // item.obj.rename()
+                        //     }
+                        // }, {
+                        //     text: "delete",
+                        //     handler: (event)=>{
+                        //         // if( !confirm("delete?") )
+                        //         //     return 
+                                
+                        //         // this.rm(item.path, function(){
+                        //         //     config['object'].refresh()
+                        //         // })
+                        //     }
+                        // }]
                         $('body').click()
                     })
                 }
