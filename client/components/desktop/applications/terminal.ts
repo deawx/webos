@@ -121,7 +121,7 @@ export class Bash
                 console.log(data.toString().replace(/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]/g, ''))
                 str += data.toString().replace(/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]/g, '')
                 if ( /[\d\w]+:\//.test(str.trim()) && /#$/.test(str.trim())){
-                    console.log('nathch ', this.callback, str)
+                    console.log('nathch ', !!this.callback)
                     this.callback && this.callback(str)
                     str = ''
                 }else{
@@ -141,6 +141,7 @@ export class Bash
     }
 
     public ls(name, done){
+        console.log('ls')
         this.callback = (data)=>{
             console.log(data.split('\n').length)
             if( data.split('\n').length === 2)
