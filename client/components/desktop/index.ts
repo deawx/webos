@@ -195,7 +195,7 @@ export class HomeCmp extends Commander implements OnInit
         })
 
         winMenuList.life.push({
-            image: 'images/icons/angular.jpg',
+            image: 'images/icons/angular2.jpg',
             click:()=>{
                 this.createCmp(UrlAppCmp).then(ref=>{
                     var component = ref['_hostElement'].component
@@ -217,7 +217,7 @@ export class HomeCmp extends Commander implements OnInit
                 })
             }
         },{
-            image: 'images/icons/webpack.jpg',
+            image: 'images/icons/webpack.svg',
             click:()=>{
                 this.createCmp(UrlAppCmp).then(ref=>{
                     var component = ref['_hostElement'].component
@@ -228,7 +228,7 @@ export class HomeCmp extends Commander implements OnInit
                 })
             }
         },{
-            image: 'images/icons/typescript.svg',
+            image: 'images/icons/typescript.png',
             big: true,
             click:()=>{
                 this.createCmp(UrlAppCmp).then(ref=>{
