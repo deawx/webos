@@ -122,7 +122,6 @@ export class HomeCmp extends Commander implements OnInit
 
     ngOnInit()
     {
-        document.domain = '127.0.0.1'
         window['iframe_var'] = 'hello iframe'
         
         window['webtorrent'] = (url)=>
