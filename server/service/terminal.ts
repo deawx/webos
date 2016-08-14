@@ -1,6 +1,5 @@
 const pty = require('pty.js')
 const sio = require('socket.io')
-import { endpoint } from '../conf/config'
     
 function fn(server)
 {
