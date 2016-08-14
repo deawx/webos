@@ -1,0 +1,159 @@
+
+.fb-tool{
+    height:40px;
+    background:#fff;
+    border-bottom: 1px solid #CCCCCC;
+    left: 0px;
+    position: absolute;
+    right: 0px;
+    top: 30px;
+}
+
+.fb-icon-computer{
+    background-image:url(images/file-browser/computer.png);
+    width:16px;
+    height:13px;
+
+    position: absolute;
+    left: 4px;
+    top: 4px;
+}
+
+
+.fb-icon-go {
+    width:20px;
+    height:20px;
+    position: absolute;
+    top: 10px;
+    width: 20px;
+    left:10px;
+}
+
+.fb-icon-back{
+    background:url(images/file-browser/fb-prev.png) no-repeat; 
+}
+.fb-icon-back-active{
+    background:url(images/file-browser/fb-prev-active.png) no-repeat; 
+}
+
+.fb-icon-ahead-active{
+    left:40px;
+    background:url(images/file-browser/fb-next-active.png) no-repeat;
+}
+
+.fb-icon-back-active:hover{
+    background:url(images/file-browser/fb-prev-focus.png) no-repeat; 
+}
+
+.fb-icon-ahead-active:hover{
+    background:url(images/file-browser/fb-next-focus.png) no-repeat;
+}
+
+.fb-icon-ahead{
+    left:40px;
+    background:url(images/file-browser/fb-next.png) no-repeat;
+}
+
+.fb-icon-arrow{
+    background:url(images/file-browser/arrow-top.png) no-repeat;
+    width:8px;
+    height:12px;
+    
+    position: absolute;
+    top: 13px;
+    left: 81px;
+}
+
+
+.fb-icon-triangle{
+    background:url(images/file-browser/triangle-bottom.png) no-repeat;
+    width:7px;
+    height:4px;
+    position: absolute;
+    top: 18px;
+    left: 66px;
+}
+
+
+
+.fb-icon-refresh
+{
+    background-image:url(images/file-browser/refresh.png);
+    width:24px;
+    border:1px solid #ccc;
+    border-left:0px;
+
+    top:8px;
+    height:23px;
+    position: absolute;
+    right: 8px;
+}
+
+.fb-tool .icon {
+   
+}
+
+.fb-header{
+    width:100%;
+    height:35px;
+}
+.tool{
+    clear:right;
+    height:25px;
+}
+
+.fb-src-input{
+    float:left;
+    border:1px solid #ccc;
+    background:#fff;
+    position: absolute;
+    height:23px;
+    top: 8px;
+    left: 73px;
+    right:30px;
+}
+
+.fb-path-input
+{
+    height:20px;
+    border:none;
+    position: absolute;
+    top: 0px;
+    left: 25px;
+    right:1px;
+    width:100%;
+}
+
+.fb-search-input
+{
+    float:left;
+    border:1px solid #ccc;
+    background:#fff;
+    position: absolute;
+    height:23px;
+    top: 8px;
+    right:10px;
+    width:225px;
+}
+
+.fb-search-input input
+{
+    height:17px;
+    border:none;
+    top:1px;
+    position: absolute;
+    right: 20px;
+    left:0px;
+    width:100%;
+}
+.fb-src-input input:focus, .fb-search-input input:focus{
+    border:none;
+}
+
+.fb-search{
+    background-image:url(../../images/file-browser/search.png);
+    width:21px;
+    height:19px;
+    position: absolute;
+    right: 0;
+}
