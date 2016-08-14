@@ -34,7 +34,7 @@ import { routes } from './conf/routes'
 import { port } from './conf/config'
 
 let app = express()
-
+console.log(__dirname, path.join(__dirname, '../public'))
 app.use(express.static(path.join(__dirname, '../public')))
 app.use(bodyParser.json())
 app.use(cookieParser())

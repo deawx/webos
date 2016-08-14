@@ -144,7 +144,7 @@ export class Bash
         console.log('ls')
         this.callback = (data)=>{
             console.log(data.split('\n').length)
-            if( data.split('\n').length === 2)
+            if( data.split('\n').length <= 2)
                 return 
 
             this.callback = null
