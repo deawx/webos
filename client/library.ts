@@ -5,7 +5,7 @@ import $ = require('jquery')
 
 //   { src: `bower_components/sh.js/build/sh.js`, inject: true, dest: JS_DEST },
 //   { src: `bower_components/socket.io-client/socket.io.js`, inject: true, dest: JS_DEST },
-
+ 
 // console.log(es6)
 
 window['$'] = window['jQuery'] = $ 

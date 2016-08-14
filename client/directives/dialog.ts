@@ -1,7 +1,7 @@
 import { Directive, Inject, ElementRef } from '@angular/core'
-import { dialog } from '../components/tools/util'
+import { dialog } from '../components/desktop/tools/util'
 
-import { Commander, CmpTool } from '../components/tools/commander'
+import { Commander, CmpTool } from '../components/desktop/tools/commander'
 declare var $, componentHandler,editormd,localStorage,_
 
 window['zIndex'] = 100

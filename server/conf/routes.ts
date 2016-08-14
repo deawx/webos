@@ -57,7 +57,6 @@ export function routes(app)
         }
 	})
 }
- 
 
 declare function require(name:string)
 

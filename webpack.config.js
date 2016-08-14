@@ -40,7 +40,7 @@ var webpackConfig = {
         'library': './client/library.ts',
         'polyfills': './client/polyfills.ts',
         'vendor': './client/vendor.ts',
-        'boot': './client/boot.ts'
+        'main': './client/main.browser.ts'
     },
     
     output: {
@@ -48,7 +48,7 @@ var webpackConfig = {
     },
     
     plugins: [
-        new webpack.optimize.CommonsChunkPlugin({ name: ['boot', 'vendor', 'polyfills'], minChunks: Infinity }),
+        new webpack.optimize.CommonsChunkPlugin({ name: ['main', 'vendor', 'polyfills'], minChunks: Infinity }),
         new HtmlWebpackPlugin({ 
             template: path.join(__dirname, 'client/index.html'),
             filename: path.join(__dirname, 'public/index.html')
