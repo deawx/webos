@@ -96,7 +96,12 @@ export class HomeCmp extends Commander implements OnInit
                 console.log()
                 console.log (shortcut.path, path.join('/'))
                 bash.unzip(shortcut.path, shortcut.path.substr(0, shortcut.path.indexOf('.')), ()=>{
-                    alert(1)
+                    if( window['cmpList']['FileExplorerCmp'] ){
+                        window['cmpList']['FileExplorerCmp'].forEach((ref, index)=>{
+                            var component = ref['_hostElement'].component
+                            component.refresh()
+                        })
+                    }
                 })
             }
             
@@ -157,19 +162,21 @@ export class HomeCmp extends Commander implements OnInit
             })
         }
 
-        winMenuList.top.push({
-            name: 'Email',
-            image: 'images/metro-icons/blue/gmail_blu.png',
-            click: ()=>{
-                this.createCmp(UrlAppCmp).then(ref=>{
-                    var component = ref['_hostElement'].component
-                    component.setUrl('http://mail.goyoo.com')
-                    component.dockbar_icon = 'icon-email'
-                    component.title = 'Goyoo Mail'
-                    $('body').click()
-                })
-            }
-        }, {
+        winMenuList.top.push(
+        //     {
+        //     name: 'Email',
+        //     image: 'images/metro-icons/blue/gmail_blu.png',
+        //     click: ()=>{
+        //         this.createCmp(UrlAppCmp).then(ref=>{
+        //             var component = ref['_hostElement'].component
+        //             component.setUrl('http://mail.goyoo.com')
+        //             component.dockbar_icon = 'icon-email'
+        //             component.title = 'Goyoo Mail'
+        //             $('body').click()
+        //         })
+        //     }
+        // }, 
+        {
             name: 'Terminal',
             image: 'images/metro-icons/blue/code_blu.png',
             click: ()=>{
@@ -289,23 +296,6 @@ export class HomeCmp extends Commander implements OnInit
         this.createCmp(DesktopCmp, false).then(ref=>
         {
             var component = ref['_hostElement'].component
-            // component.contextmenu = ((x, y)=>
-            // {
-            //     this.createCmp(MenuCmp, false).then(ref=>
-            //     {
-            //         var component = ref['_hostElement'].component
-            //         component.left = x
-            //         component.top = y
-
-            //         component.items = [
-            //             { text: '新建', items: [ {text: '文件夹'}, {text: '文本'}] },
-            //             { text: '复制' },
-            //             { text: '保存' },
-            //             { text: '重命名' },
-            //             { text: '属性' },
-            //         ]
-            //     })
-            // })
             
             component.items = [{
                 icon: 'icon-user',
