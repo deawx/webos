@@ -7,3 +7,18 @@
 
 
 ![](https://github.com/junjun16818/webos/blob/master/resource/images/demo/demo.jpeg?raw=true)
+
+
+#build
+
+```
+  git clone 
+  cd webos
+  npm install 
+  npm run typings-install
+  npm start
+  
+  # url http://localhost:8119/#/desktop/{{docker_host}}/{{container}}
+  # example http://localhost:8119/#/desktop/127.0.0.1:2375/helloworld
+  
+```
