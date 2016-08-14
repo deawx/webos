@@ -1,6 +1,5 @@
 const path = require('path')
 const request = require('request')
-import { endpoint } from './config'
     
 var tar =  require('tar')
 var multipart = require('connect-multiparty')
