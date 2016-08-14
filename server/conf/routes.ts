@@ -1,6 +1,6 @@
 const path = require('path')
 const request = require('request')
-import { BASE_CLOUD_API_URL, endpoint } from './config'
+import { endpoint } from './config'
     
 var tar =  require('tar')
 var multipart = require('connect-multiparty')

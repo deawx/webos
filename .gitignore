@@ -3,3 +3,4 @@ public
 typings
 dist
 Makefile
+server/conf/config.js
