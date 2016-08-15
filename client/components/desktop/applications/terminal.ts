@@ -137,7 +137,7 @@ export class Bash
             this.callback = null
             done(null, data.split('\n').slice(1, -1).join('\n'))
         }
-        this.socket.emit('data'+this.term_id, 'cat '+ path +'\n')
+        this.socket.emit('data'+this.term_id, `cat '${path}' \n`)
     }
 
     public ls(name, done){
@@ -160,7 +160,7 @@ export class Bash
             this.callback = null
             done()
         }
-        this.socket.emit('data'+this.term_id, `echo "${text}" > ${path} \n`)
+        this.socket.emit('data'+this.term_id, `echo "${text}" > '${path}' \n`)
     }
 
     public rm(path, done){
@@ -168,7 +168,7 @@ export class Bash
             this.callback = null
             done()
         }
-        this.socket.emit('data'+this.term_id, `rm -r  ${path} \n`)
+        this.socket.emit('data'+this.term_id, `rm -r  '${path}' \n`)
     }
     
     public cp(path, newPath, done){
@@ -176,7 +176,7 @@ export class Bash
             this.callback = null
             done()
         }
-        this.socket.emit('data'+this.term_id, `cp -r  ${path} ${newPath} \n`)
+        this.socket.emit('data'+this.term_id, `cp -r  '${path}' '${newPath}' \n`)
     }
     
     public mv(path, newPath, done){
@@ -193,7 +193,7 @@ export class Bash
             done()
         }
         console.log(path)
-        this.socket.emit('data'+this.term_id, `mkdir ${path} \n`)
+        this.socket.emit('data'+this.term_id, `mkdir '${path}' \n`)
     }
 
     public touch(path, done){
@@ -202,7 +202,7 @@ export class Bash
             done()
         }
         console.log(path)
-        this.socket.emit('data'+this.term_id, `touch ${path} \n`)
+        this.socket.emit('data'+this.term_id, `touch '${path}' \n`)
     }
     
     public unzip(path, topath, done){
@@ -212,7 +212,7 @@ export class Bash
             done()
         }
         console.log(`unzip -o -d ${topath} ${path}`)
-        this.socket.emit('data'+this.term_id, `unzip -o -d ${topath} ${path} \n`)
+        this.socket.emit('data'+this.term_id, `unzip -o -d '${topath}' '${path}' \n`)
     }
 
     public parse(str){
@@ -229,7 +229,8 @@ export class Bash
         
         list2.forEach(function(item, index)
         {
-            item = item.replace(/ /g, '')
+            console.log(item)
+            // item = item.replace(/ /g, '')
             if( !item )
                 return
             
@@ -239,7 +240,7 @@ export class Bash
                 return 
             
             list3.push({
-                type: str[1]? str[1].split(';')[0]: '',
+                type: str[1]? str[1].replace(/ /g, '').split(';')[0]: '',
                 name: str[0]? str[0].split('/').pop(): '',
                 path: str[0].replace(/\/\//g, '/')
             })

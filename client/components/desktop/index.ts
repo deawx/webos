@@ -363,54 +363,7 @@ export class HomeCmp extends Commander implements OnInit
                         component.uploadUrl = '/upload/' + this.host+'/' +  this.container
                         component.setContainer(this.host, this.container)
                         component.rightClick = (event)=>{
-                            this.createCmp(MenuCmp, false).then(ref=>{
-                                var menu = ref['_hostElement'].component
-                                menu.top = event.pageY-10
-                                menu.left = event.pageX
-
-                                menu.items = [{
-                                    text: "New",
-                                    items: [{
-                                        text: 'Folder',
-                                        handler: ()=>{
-                                            this.bash.mkdir(component.path+'/NewFolder', ()=>{
-                                                this.refresh()
-                                            })
-                                        }
-                                    }, {
-                                        text: 'Text Document',
-                                        handler: ()=>{
-                                            this.bash.touch(component.path+'/NewDocument', ()=>{
-                                                this.refresh()
-                                            })
-                                        }
-                                    }],
-                                    handler: function(event){
-                                        
-                                    }
-                                }, {
-                                    text: "Refresh",
-                                    handler: function(event) 
-                                    {
-                                        component.refresh()   
-                                    }
-                                }, {
-                                    text: "Paste",
-                                    disabled: this.copyPath,
-                                    handler: (event)=>
-                                    {
-                                        var filename = this.copyPath.split('/').pop() + '_copy'
-                                        
-                                        this.bash.cp(this.copyPath, component.path + '/' + filename, ()=>{
-                                            this.refresh()
-                                        })
-                                    }
-                                }]
-
-                                
-                                //component.setUrl(url, this.host)
-                                //this.applicationRef.tick()
-                            })
+                            this.createFileExplorerMenu(event, component)
                             event.returnvalue=false;
                             event.stopPropagation()
                             return false
@@ -429,6 +382,12 @@ export class HomeCmp extends Commander implements OnInit
                         var component = ref['_hostElement'].component
                         component.path = '/'
                         component.setContainer(this.host, this.container)
+                        component.rightClick = (event)=>{
+                            this.createFileExplorerMenu(event, component)
+                            event.returnvalue=false;
+                            event.stopPropagation()
+                            return false
+                        }
                     })
                 }
             },{
@@ -458,6 +417,57 @@ export class HomeCmp extends Commander implements OnInit
             //     }
             // }
             ]
+        })
+    }
+    createFileExplorerMenu(event, component)
+    {
+        this.createCmp(MenuCmp, false).then(ref=>{
+            var menu = ref['_hostElement'].component
+            menu.top = event.pageY-10
+            menu.left = event.pageX
+
+            menu.items = [{
+                text: "New",
+                items: [{
+                    text: 'Folder',
+                    handler: ()=>{
+                        this.bash.mkdir(component.path+'/NewFolder', ()=>{
+                            this.refresh()
+                        })
+                    }
+                }, {
+                    text: 'Text Document',
+                    handler: ()=>{
+                        this.bash.touch(component.path+'/NewDocument', ()=>{
+                            this.refresh()
+                        })
+                    }
+                }],
+                handler: function(event){
+                    
+                }
+            }, {
+                text: "Refresh",
+                handler: function(event) 
+                {
+                    component.refresh()   
+                }
+            }, {
+                text: "Paste",
+                disabled: this.copyPath,
+                handler: (event)=>
+                {
+                    var filename = this.copyPath.split('/').pop() + '_copy'
+                    
+                    this.bash.cp(this.copyPath, component.path + '/' + filename, ()=>{
+                        this.refresh()
+                    })
+                }
+            }]
+
+            
+            //component.setUrl(url, this.host)
+            //this.applicationRef.tick()
         })
     }
 }
