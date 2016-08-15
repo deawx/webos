@@ -1,7 +1,6 @@
 import { Component, Inject, ElementRef, Input } from '@angular/core';
 import { CORE_DIRECTIVES } from '@angular/common';
-// import { menuList} from '../../desktop/menu/menu';
-
+import { MenuCmp } from '../menu/menu'
 declare var $
 
 var dblclick
@@ -78,22 +77,22 @@ export class ShortcutCmp
     
     rightClick(event){
         
-        // $('.icon-active').removeClass('icon-active')
-		// $(this.element).find('.icon-block').addClass('icon-active')
+        $('.icon-active').removeClass('icon-active')
+		$(this.element).find('.icon-block').addClass('icon-active')
         
-        // if( !this.shortcut.menu )
-        //     return 
+        if( !this.shortcut.menu )
+            return 
         
-        // menuList.splice(0, 100)
-        // menuList.push({
-        //     top:event.pageY-10,
-        //     left: event.pageX,
-        //     items: this.shortcut.menu 
-        // })
+        menuList.splice(0, 100)
+        menuList.push({
+            top:event.pageY-10,
+            left: event.pageX,
+            items: this.shortcut.menu 
+        })
         
-        // event.returnvalue=false;
-        // event.stopPropagation()
-        // return false
+        event.returnvalue=false;
+        event.stopPropagation()
+        return false
     }
     
     hideMenu(){
