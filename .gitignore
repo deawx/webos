@@ -4,3 +4,4 @@ typings
 dist
 Makefile
 server/conf/config.js
+test.js
