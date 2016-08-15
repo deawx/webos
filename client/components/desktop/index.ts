@@ -1,9 +1,7 @@
 import { Component, OnInit, DynamicComponentLoader,ViewContainerRef, Injector, ApplicationRef } from '@angular/core';
 
 import { DesktopCmp } from './desktop/desktop'
-// import { ROUTER_DIRECTIVES, RouteParams, Router }   from '@angular/router-deprecated';
 import { ActivatedRoute } from '@angular/router'
-// import { searchEvent } from './dockbar/start/start'
 import { DockbarCmp, dockAppList, searchEvent } from './dockbar/dockbar'
 import { FileExplorerCmp } from './file-explorer/file-explorer'
 import { TerminalCmp } from './applications/terminal'
@@ -12,7 +10,7 @@ import { PdfCmp } from './applications/pdf'
 import { VsCodeCmp } from './applications/vscode'
 import { MenuCmp } from './menu/menu'
 import { Commander } from './tools/commander'
-import { dblClickEvent } from './shortcut/shortcut'
+import { dblClickEvent, contextmenuEvent } from './shortcut/shortcut'
 import { winMenuList } from './dockbar/win-menu/win-menu'
 import { Bash } from './applications/terminal'
 import { Webtorrent } from './applications/webtorrent'
@@ -38,27 +36,78 @@ export class HomeCmp extends Commander implements OnInit
     callback
     host
     container
+    copyPath
+    bash
     constructor(public activatedRoute: ActivatedRoute, public dcl: DynamicComponentLoader, public viewContainerRef: ViewContainerRef, private sanitizer: DomSanitizationService, private applicationRef: ApplicationRef){
         super()
-        var bash
+        
         
         this.activatedRoute.params.subscribe(params => {
             this.container = params['container']
             this.host = params['host']
             console.log(this.host, this.container)
-            bash = new Bash(this.host, this.container)
+            this.bash = new Bash(this.host, this.container)
         })
         
+
+        
+        contextmenuEvent((event, shortcut)=>
+        {
+            this.createCmp(MenuCmp, false).then(ref=>{
+                var component = ref['_hostElement'].component
+                component.top = event.pageY-10
+                component.left = event.pageX
+
+                component.items = [{
+                    text: 'Open',
+                    handler: (event)=>{
+                        shortcut.dblclick()       
+                    }
+                }, {
+                    text: "Rename",
+                    handler: (event)=>
+                    {
+                        shortcut.rename = (val)=>{
+                            var newPath = shortcut.shortcut.path.split('/')
+                            newPath.pop()
+
+                            this.bash.mv(shortcut.shortcut.path, `${newPath.join('/')}/${val}`, ()=>{
+                                this.refresh()
+                            })
+                        }
+                        shortcut.onRename()
+                    }
+                },{
+                    text: 'Copy',
+                    handler: (event)=>{
+                        this.copyPath = shortcut.shortcut.path
+                    }
+                }, {
+                    text: "Delete",
+                    handler: (event)=>{
+                        if( !confirm("delete?") )
+                            return 
+
+                        this.bash.rm(shortcut.shortcut.path, ()=>{
+                            this.refresh()
+                        })
+                    }
+                }]
+                //component.setUrl(url, this.host)
+                //this.applicationRef.tick()
+            })
+        })
+
         dblClickEvent((shortcut)=>{
             if( shortcut.type === 'text/plain' || shortcut.type === 'inode/x-empty' ){
-                bash.cat(shortcut.path, (err, data)=>{
+                this.bash.cat(shortcut.path, (err, data)=>{
                     this.createCmp(VsCodeCmp).then((ref)=>{
                         var component = ref['_hostElement'].component
                         component.text = data
                         component.title = shortcut.path.split('/').pop()
                         component.onSave = (text)=>{
                             text = text.replace(/\n/g, '').replace(/\n$/, '')
-                            bash.write(shortcut.path, text, (err)=>{
+                            this.bash.write(shortcut.path, text, (err)=>{
 
                             })
                         }
@@ -95,18 +144,22 @@ export class HomeCmp extends Commander implements OnInit
                 var path = shortcut.path.split('/')
                 console.log()
                 console.log (shortcut.path, path.join('/'))
-                bash.unzip(shortcut.path, shortcut.path.substr(0, shortcut.path.indexOf('.')), ()=>{
-                    if( window['cmpList']['FileExplorerCmp'] ){
-                        window['cmpList']['FileExplorerCmp'].forEach((ref, index)=>{
-                            var component = ref['_hostElement'].component
-                            component.refresh()
-                        })
-                    }
+                this.bash.unzip(shortcut.path, shortcut.path.substr(0, shortcut.path.indexOf('.')), ()=>{
+                    this.refresh()
                 })
             }
             
             console.log(shortcut)
         })
+    }
+
+    refresh(){
+        if( window['cmpList']['FileExplorerCmp'] ){
+            window['cmpList']['FileExplorerCmp'].forEach((ref, index)=>{
+                var component = ref['_hostElement'].component
+                component.refresh()
+            })
+        }
     }
 
     getRequest(): any 
@@ -309,27 +362,59 @@ export class HomeCmp extends Commander implements OnInit
                         component.path = '/root/'
                         component.uploadUrl = '/upload/' + this.host+'/' +  this.container
                         component.setContainer(this.host, this.container)
-                        // component.shortcut_menu = [{
-                        //     text: 'open',
-                        //     handler: function(event){
-                        //         // item.dblclick()       
-                        //     }
-                        // }, {
-                        //     text: "rename",
-                        //     handler: function(event){
-                        //         // item.obj.rename()
-                        //     }
-                        // }, {
-                        //     text: "delete",
-                        //     handler: (event)=>{
-                        //         // if( !confirm("delete?") )
-                        //         //     return 
+                        component.rightClick = (event)=>{
+                            this.createCmp(MenuCmp, false).then(ref=>{
+                                var menu = ref['_hostElement'].component
+                                menu.top = event.pageY-10
+                                menu.left = event.pageX
+
+                                menu.items = [{
+                                    text: "New",
+                                    items: [{
+                                        text: 'Folder',
+                                        handler: ()=>{
+                                            this.bash.mkdir(component.path+'/NewFolder', ()=>{
+                                                this.refresh()
+                                            })
+                                        }
+                                    }, {
+                                        text: 'Text Document',
+                                        handler: ()=>{
+                                            this.bash.touch(component.path+'/NewDocument', ()=>{
+                                                this.refresh()
+                                            })
+                                        }
+                                    }],
+                                    handler: function(event){
+                                        
+                                    }
+                                }, {
+                                    text: "Refresh",
+                                    handler: function(event) 
+                                    {
+                                        component.refresh()   
+                                    }
+                                }, {
+                                    text: "Paste",
+                                    disabled: this.copyPath,
+                                    handler: (event)=>
+                                    {
+                                        var filename = this.copyPath.split('/').pop() + '_copy'
+                                        
+                                        this.bash.cp(this.copyPath, component.path + '/' + filename, ()=>{
+                                            this.refresh()
+                                        })
+                                    }
+                                }]
+
                                 
-                        //         // this.rm(item.path, function(){
-                        //         //     config['object'].refresh()
-                        //         // })
-                        //     }
-                        // }]
+                                //component.setUrl(url, this.host)
+                                //this.applicationRef.tick()
+                            })
+                            event.returnvalue=false;
+                            event.stopPropagation()
+                            return false
+                        }
                         $('body').click()
                     })
                 }

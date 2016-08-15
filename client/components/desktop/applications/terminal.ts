@@ -118,10 +118,10 @@ export class Bash
             
             this.term_id = term_id
             this.socket.on('data'+term_id, (data)=>{
-                console.log(data.toString().replace(/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]/g, ''))
+                // console.log(data.toString().replace(/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]/g, ''))
                 str += data.toString().replace(/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]/g, '')
                 if ( /[\d\w]+:\//.test(str.trim()) && /#$/.test(str.trim())){
-                    console.log('nathch ', !!this.callback)
+                    // console.log('nathch ', !!this.callback)
                     this.callback && this.callback(str)
                     str = ''
                 }else{
@@ -162,6 +162,48 @@ export class Bash
         }
         this.socket.emit('data'+this.term_id, `echo "${text}" > ${path} \n`)
     }
+
+    public rm(path, done){
+        this.callback = (data)=>{
+            this.callback = null
+            done()
+        }
+        this.socket.emit('data'+this.term_id, `rm -r  ${path} \n`)
+    }
+    
+    public cp(path, newPath, done){
+        this.callback = (data)=>{
+            this.callback = null
+            done()
+        }
+        this.socket.emit('data'+this.term_id, `cp -r  ${path} ${newPath} \n`)
+    }
+    
+    public mv(path, newPath, done){
+        this.callback = (data)=>{
+            this.callback = null
+            done()
+        }
+        this.socket.emit('data'+this.term_id, `mv '${path}' '${newPath}' \n`)
+    }
+
+    public mkdir(path, done){
+        this.callback = (data)=>{
+            this.callback = null
+            done()
+        }
+        console.log(path)
+        this.socket.emit('data'+this.term_id, `mkdir ${path} \n`)
+    }
+
+    public touch(path, done){
+        this.callback = (data)=>{
+            this.callback = null
+            done()
+        }
+        console.log(path)
+        this.socket.emit('data'+this.term_id, `touch ${path} \n`)
+    }
     
     public unzip(path, topath, done){
         // unzip -o -d ' + paths + ' ' + req.query.path
@@ -199,7 +241,7 @@ export class Bash
             list3.push({
                 type: str[1]? str[1].split(';')[0]: '',
                 name: str[0]? str[0].split('/').pop(): '',
-                path: str[0]
+                path: str[0].replace(/\/\//g, '/')
             })
         })
         

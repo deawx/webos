@@ -68,12 +68,12 @@ export class MenuCmp extends Commander{
             event.returnvalue=false;
             event.stopPropagation()
         }
-        return false
         // alert(1)
         // menuList.splice(0, 100)
-        // setTimeout(function() {
-        //     item.handler()
-        // }, 10);
+        setTimeout(function() {
+            item.handler()
+        }, 10);
+        return false
     }
     
     mouseenter(){

@@ -93,7 +93,9 @@ export class FileExplorerCmp implements OnDestroy
                 item.text = item.name
 
                 item.icon = iconMap[item.type] || 'icon-file'
-                item.menu = this.shortcut_menu
+                item.menu = ()=>{
+                    alert(1)
+                }
                 if( item.icon === 'icon-folder' ){
                     item.dblclick = (data)=>{
                         this.setPath(data.path.replace('//', '/'))
